@@ -13,11 +13,21 @@ let contents;
 
 function pathArg(arg) {
   if (fs.existsSync(arg) && fs.lstatSync(arg).isFile()) {
-    const file = fs.readFileSync(arg, { encoding: "utf8" });
-    console.log(file);
+    contents = fs.readFileSync(arg, { encoding: "utf8" });
   } else {
     program.error("Path provided is not a valid file path.", { exitCode: 1 });
   }
+}
+
+function regexArg(arg) {
+  const redColor = "\x1b[31m";
+  const boldColor = "\x1b[1m";
+  const resetColor = "\x1b[0m";
+
+  let regex = new RegExp(arg, "g");
+  console.log(
+    contents.replace(regex, `${redColor}${boldColor}$&${resetColor}`),
+  );
 }
 
 program
@@ -25,10 +35,10 @@ program
     "path",
     "Pass a file path as an argument to parse with regular expressions.",
   )
-  .action((arg) => {
-    pathArg(arg);
+  .argument("regexp", "Parse file using regular expressions")
+  .action((pArg, rArg) => {
+    pathArg(pArg);
+    regexArg(rArg);
   });
-
-program.argument("regexp", "Parse file using regular expressions");
 
 program.parse();
