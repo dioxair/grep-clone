@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/dioxair/grep-clone/issues"
   },
-  "homepage": "https://github.com/dioxair/grep-clone#readme"
+  "homepage": "https://github.com/dioxair/grep-clone#readme",
+  "dependencies": {
+    "commander": "^12.1.0"
+  }
 }
