@@ -1,4 +1,4 @@
-import { Command } from 'commander';
+import { Command, Option } from 'commander';
 import fs from 'fs';
 
 let contents;
@@ -20,16 +20,30 @@ function regexArg(arg) {
         regex = new RegExp(arg, "gi");
     if (!regex.test(contents))
         program.error("No matches found.", { exitCode: 1 });
+    let result = "";
     if (!program.opts().all) {
         let lines = contents.split("\n");
         for (let i = 0; i < lines.length; i++) {
             if (regex.test(lines[i])) {
-                console.log(lines[i].replace(regex, `${redColor}${boldColor}$&${resetColor}`));
+                result +=
+                    lines[i].replace(regex, `${redColor}${boldColor}$&${resetColor}`) +
+                        "\n";
             }
         }
-        return;
     }
-    console.log(contents.replace(regex, `${redColor}${boldColor}$&${resetColor}`));
+    else {
+        result = contents.replace(regex, `${redColor}${boldColor}$&${resetColor}`);
+    }
+    if (program.opts().exclude) {
+        if (result.includes(program.opts().exclude)) {
+            result = result.replace(new RegExp(`^.*${program.opts().exclude}.*$`, "mg"), "");
+            // if string only contains newlines, throw no matches found error
+            if (/^\n*$/.test(result)) {
+                program.error("No matches found, try being more specific with your excludes regex?", { exitCode: 1 });
+            }
+        }
+    }
+    console.log(result);
 }
 
 const program = new Command();
@@ -42,6 +56,7 @@ program
     .argument("regexp", "Parse file using regular expressions.")
     .option("-a, --all", "Return entire original file with matched regular expression.")
     .option("-i, --insensitive", "Disable case sensitivity.")
+    .addOption(new Option("-v, --exclude <string>", "Exclude a regular expression from search results").conflicts("all"))
     .action((pArg, rArg) => {
     pathArg(pArg);
     regexArg(rArg);

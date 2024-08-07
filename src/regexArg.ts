@@ -12,19 +12,36 @@ export function regexArg(arg: string) {
   if (!regex.test(contents))
     program.error("No matches found.", { exitCode: 1 });
 
+  let result = "";
+
   if (!program.opts().all) {
     let lines = contents.split("\n");
     for (let i = 0; i < lines.length; i++) {
       if (regex.test(lines[i])) {
-        console.log(
-          lines[i].replace(regex, `${redColor}${boldColor}$&${resetColor}`),
+        result +=
+          lines[i].replace(regex, `${redColor}${boldColor}$&${resetColor}`) +
+          "\n";
+      }
+    }
+  } else {
+    result = contents.replace(regex, `${redColor}${boldColor}$&${resetColor}`);
+  }
+
+  if (program.opts().exclude) {
+    if (result.includes(program.opts().exclude)) {
+      result = result.replace(
+        new RegExp(`^.*${program.opts().exclude}.*$`, "mg"),
+        "",
+      );
+      // if string only contains newlines, throw no matches found error
+      if (/^\n*$/.test(result)) {
+        program.error(
+          "No matches found, try being more specific with your excludes regex?",
+          { exitCode: 1 },
         );
       }
     }
-    return;
   }
 
-  console.log(
-    contents.replace(regex, `${redColor}${boldColor}$&${resetColor}`),
-  );
+  console.log(result);
 }
