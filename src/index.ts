@@ -1,4 +1,4 @@
-import { Command } from "commander";
+import { Command, Option } from "commander";
 import { regexArg } from "./regexArg.js";
 import { pathArg } from "./pathArg.js";
 
@@ -20,6 +20,12 @@ program
     "Return entire original file with matched regular expression.",
   )
   .option("-i, --insensitive", "Disable case sensitivity.")
+  .addOption(
+    new Option(
+      "-v, --exclude <string>",
+      "Exclude a regular expression from search results",
+    ).conflicts("all"),
+  )
   .action((pArg: string, rArg: string) => {
     pathArg(pArg);
     regexArg(rArg);
