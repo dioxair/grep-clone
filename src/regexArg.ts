@@ -7,6 +7,8 @@ export function regexArg(arg: string) {
   const resetColor = "\x1b[0m";
 
   let regex = new RegExp(arg, "g");
+  if (program.opts().insensitive) regex = new RegExp(arg, "gi");
+
   if (!regex.test(contents))
     program.error("No matches found.", { exitCode: 1 });
 

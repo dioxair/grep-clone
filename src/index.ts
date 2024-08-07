@@ -19,6 +19,7 @@ program
     "-a, --all",
     "Return entire original file with matched regular expression.",
   )
+  .option("-i, --insensitive", "Disable case sensitivity.")
   .action((pArg: string, rArg: string) => {
     pathArg(pArg);
     regexArg(rArg);

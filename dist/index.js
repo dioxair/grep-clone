@@ -16,6 +16,8 @@ function regexArg(arg) {
     const boldColor = "\x1b[1m";
     const resetColor = "\x1b[0m";
     let regex = new RegExp(arg, "g");
+    if (program.opts().insensitive)
+        regex = new RegExp(arg, "gi");
     if (!regex.test(contents))
         program.error("No matches found.", { exitCode: 1 });
     if (!program.opts().all) {
@@ -39,6 +41,7 @@ program
     .argument("path", "Pass a file path as an argument to parse with regular expressions.")
     .argument("regexp", "Parse file using regular expressions.")
     .option("-a, --all", "Return entire original file with matched regular expression.")
+    .option("-i, --insensitive", "Disable case sensitivity.")
     .action((pArg, rArg) => {
     pathArg(pArg);
     regexArg(rArg);
