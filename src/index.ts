@@ -1,5 +1,5 @@
-import { Command } from "commander"
-import { regexArg } from "./regexArg.js"
+import { Command } from "commander";
+import { regexArg } from "./regexArg.js";
 import { pathArg } from "./pathArg.js";
 
 export const program = new Command();
@@ -14,8 +14,11 @@ program
     "path",
     "Pass a file path as an argument to parse with regular expressions.",
   )
-  .argument("regexp", "Parse file using regular expressions")
-  .option("-om, --onlymatch", "Only return matched substrings")
+  .argument("regexp", "Parse file using regular expressions.")
+  .option(
+    "-a, --all",
+    "Return entire original file with matched regular expression.",
+  )
   .action((pArg: string, rArg: string) => {
     pathArg(pArg);
     regexArg(rArg);

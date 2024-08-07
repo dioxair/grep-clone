@@ -17,9 +17,8 @@ function regexArg(arg) {
     const resetColor = "\x1b[0m";
     let regex = new RegExp(arg, "g");
     if (!regex.test(contents))
-        return;
-    if (program.opts().onlymatch) {
-        console.log(program.opts().onlymatch);
+        program.error("No matches found.", { exitCode: 1 });
+    if (!program.opts().all) {
         let lines = contents.split("\n");
         for (let i = 0; i < lines.length; i++) {
             if (regex.test(lines[i])) {
@@ -38,8 +37,8 @@ program
     .version("0.0.0");
 program
     .argument("path", "Pass a file path as an argument to parse with regular expressions.")
-    .argument("regexp", "Parse file using regular expressions")
-    .option("-om, --onlymatch", "Only return matched substrings")
+    .argument("regexp", "Parse file using regular expressions.")
+    .option("-a, --all", "Return entire original file with matched regular expression.")
     .action((pArg, rArg) => {
     pathArg(pArg);
     regexArg(rArg);

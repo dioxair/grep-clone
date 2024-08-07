@@ -7,9 +7,10 @@ export function regexArg(arg: string) {
   const resetColor = "\x1b[0m";
 
   let regex = new RegExp(arg, "g");
-  if (!regex.test(contents)) return;
+  if (!regex.test(contents))
+    program.error("No matches found.", { exitCode: 1 });
 
-  if (program.opts().onlymatch) {
+  if (!program.opts().all) {
     let lines = contents.split("\n");
     for (let i = 0; i < lines.length; i++) {
       if (regex.test(lines[i])) {
