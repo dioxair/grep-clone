@@ -9,7 +9,7 @@ export function regexArg(arg: string) {
   let regex = new RegExp(arg, "g");
   if (!regex.test(contents)) return;
 
-  if (program.opts().Om) {
+  if (program.opts().onlymatch) {
     let lines = contents.split("\n");
     for (let i = 0; i < lines.length; i++) {
       if (regex.test(lines[i])) {

@@ -15,7 +15,7 @@ program
     "Pass a file path as an argument to parse with regular expressions.",
   )
   .argument("regexp", "Parse file using regular expressions")
-  .option("-om", "--onlymatch", "Only return matched substrings")
+  .option("-om, --onlymatch", "Only return matched substrings")
   .action((pArg: string, rArg: string) => {
     pathArg(pArg);
     regexArg(rArg);

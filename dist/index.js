@@ -18,7 +18,8 @@ function regexArg(arg) {
     let regex = new RegExp(arg, "g");
     if (!regex.test(contents))
         return;
-    if (program.opts().Om) {
+    if (program.opts().onlymatch) {
+        console.log(program.opts().onlymatch);
         let lines = contents.split("\n");
         for (let i = 0; i < lines.length; i++) {
             if (regex.test(lines[i])) {
@@ -38,7 +39,7 @@ program
 program
     .argument("path", "Pass a file path as an argument to parse with regular expressions.")
     .argument("regexp", "Parse file using regular expressions")
-    .option("-om", "--onlymatch", "Only return matched substrings")
+    .option("-om, --onlymatch", "Only return matched substrings")
     .action((pArg, rArg) => {
     pathArg(pArg);
     regexArg(rArg);
