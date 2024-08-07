@@ -1,4 +1,6 @@
 const { Command } = require("commander");
+const fs = require("fs");
+
 const program = new Command();
 
 program
@@ -6,22 +8,27 @@ program
   .description("A (bad) clone of grep in JavaScript")
   .version("0.0.0");
 
+// TODO: maybe not use a global var for this idk
+let contents;
+
+function pathArg(arg) {
+  if (fs.existsSync(arg) && fs.lstatSync(arg).isFile()) {
+    const file = fs.readFileSync(arg, { encoding: "utf8" });
+    console.log(file);
+  } else {
+    program.error("Path provided is not a valid file path.", { exitCode: 1 });
+  }
+}
+
 program
-  .requiredOption(
-    "-p",
-    "--path <string>",
-    "Pass a file paht as an argument to parse with regular expressions.",
+  .argument(
+    "path",
+    "Pass a file path as an argument to parse with regular expressions.",
   )
-  .option("-r", "--regexp <string>", "Parse file using regular expressions");
+  .action((arg) => {
+    pathArg(arg);
+  });
+
+program.argument("regexp", "Parse file using regular expressions");
 
 program.parse();
-
-const options = program.opts();
-
-if (options.p) {
-  console.log("path");
-}
-
-if (options.r) {
-  console.log("regexp");
-}
