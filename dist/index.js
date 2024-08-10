@@ -44,19 +44,30 @@ function regexArg(arg) {
         regex = new RegExp(arg, "gi");
     if (!regex.test(contents))
         program.error("No matches found.", { exitCode: 1 });
-    let result = contents;
     if (program.opts().exclude) {
         if (contents.includes(program.opts().exclude)) {
             const lines = result.split("\n");
             let filteredLines = lines.filter((line) => !line.includes(program.opts().exclude));
             result = highlightChars(regex, filteredLines.join("\n"));
+                result +=
+                console.log(lines[i].replace(regex, `${redColor}${boldColor}$&${resetColor}`));
+                        "\n";
         }
     }
-    else {
+        return;
         result = highlightChars(regex, result);
     }
-    noMatchesFoundTest(result);
-    result = result.trim();
+    else {
+    console.log(contents.replace(regex, `${redColor}${boldColor}$&${resetColor}`));
+    }
+    if (program.opts().exclude) {
+        if (result.includes(program.opts().exclude)) {
+            result = result.replace(new RegExp(`^.*${program.opts().exclude}.*$`, "mg"), "");
+            // if string only contains newlines, throw no matches found error
+                program.error("No matches found, try being more specific with your excludes regex?", { exitCode: 1 });
+            }
+        }
+    }
     console.log(result);
 }
 
